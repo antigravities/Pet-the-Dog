@@ -1,0 +1,9 @@
+{
+  "name": "Pet the Dog",
+  "author": "Alexandra",
+  "workshopId": 0,
+  "version": 1.0,
+  "worksVersion": 0.7,
+  "entryPoint": "main.lua",
+  "description": "Yes, you can now pet the dogs."
+}
