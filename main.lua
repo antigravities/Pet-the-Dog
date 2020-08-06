@@ -9,9 +9,9 @@ Mannequin:Import("Vector")
 Mannequin:Import("UIOverlay")
 Mannequin:Import("Emote")
 
-local btn
+print("Get ready to pet the dog!")
 
-print("inject...")
+local btn
 
 function pet()
     UIOverlay.SelectedAgent.Body.ShowEmote(Emote("emotes/happy"), 5000)
@@ -21,7 +21,6 @@ Event.On("Game", function()
     mon = status == EGameStatus.Game
 
     if btn == nil then
-        print("creating button")
         btn = UIButton("Pet the Dog", pet, EUIAnchor.BottomRight)
         btn.Size = Vector(200, 140)
         UIRoot.AddComponent(btn)
@@ -35,14 +34,7 @@ end)
 
 Event.On("Tick", function(ticks)
    if ticks%10 == 0 and not (btn == nil) then
-        print("tick")
         local sel = UIOverlay.SelectedAgent
-
-        if not (sel == nil) and sel.IsLiving and sel.Data.ID == "dom_dog" then
-            print("pupperoni")
-            print(btn)
-            btn.Visible = true
-        else btn.Visible = false
-        end
+        btn.Visible = not (sel == nil) and sel.IsLiving and sel.Data.ID == "dom_dog"
    end
 end)
