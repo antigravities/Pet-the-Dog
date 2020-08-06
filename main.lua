@@ -1,10 +1,7 @@
 Mannequin:Import("Event")
-Mannequin:Import("Game")
-Mannequin:Import("EGameStatus")
 Mannequin:Import("UIRoot")
 Mannequin:Import("UIButton")
 Mannequin:Import("EUIAnchor")
-Mannequin:Import("UIPanel")
 Mannequin:Import("Vector")
 Mannequin:Import("UIOverlay")
 Mannequin:Import("Emote")
@@ -17,19 +14,11 @@ function pet()
     UIOverlay.SelectedAgent.Body.ShowEmote(Emote("emotes/happy"), 5000)
 end
 
-Event.On("Game", function()
-    mon = status == EGameStatus.Game
-
-    if btn == nil then
-        btn = UIButton("Pet the Dog", pet, EUIAnchor.BottomRight)
-        btn.Size = Vector(200, 140)
-        UIRoot.AddComponent(btn)
-        btn.Visible = false
-    end
-
-    if mon then
-        UIRoot.AddComponent(btn)
-    end
+Event.Once("Game", function()
+    btn = UIButton("Pet the Dog", pet, EUIAnchor.BottomRight)
+    btn.Size = Vector(200, 140)
+    UIRoot.AddComponent(btn)
+    btn.Visible = false
 end)
 
 Event.On("Tick", function(ticks)
