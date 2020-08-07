@@ -8,32 +8,49 @@ Mannequin:Import("Emote")
 Mannequin:Import("Job")
 Mannequin:Import("EJobResult")
 
-print("Get ready to pet the dog!")
-
 local btn
+
+function p(str)
+    print("[Pet the Dog] " .. str)
+end
+
+p("Get ready to pet the dog!")
 
 function pet()
     local sel = UIOverlay.SelectedAgent
 
+    p("Petting " .. sel.Name)
+
     local job = Job("PathToAgent", sel.Scene, sel)
     job:Dispatch(sel.Scene, function(status)
         if status == EJobResult.Success then sel.Body.ShowEmote(Emote("emotes/happy"), 5000)
-        else print("path job failed " .. status)
+        else p("path job failed " .. status)
         end
+        btn.Enabled = true
     end)
+
+    btn.Enabled = false
 end
 
 Event.Once("Game", function()
     btn = UIButton("Pet the Dog", pet, EUIAnchor.BottomRight)
-    btn.Size = Vector(200, 140)
+    btn.Size = Vector(200, 50)
     UIRoot.AddComponent(btn)
     btn.Visible = false
 end)
 
-Event.On("Tick", function(ticks)
-   if ticks%10 == 0 and not (btn == nil) then
-        local sel = UIOverlay.SelectedAgent
-        if not (sel == nil) then print(sel.Data.ID) end
-        btn.Visible = not (sel == nil) and sel.IsLiving and sel.Data.ID == "dom_dog"
-   end
+Event.On("Overlay_SelectedAgent", function(new)
+    if btn == nil then return end
+	btn.Visible = not (new == nil) and new.IsLiving and new.Data.ID == "dom_dog"
+    return true
+end)
+
+Event.On("Unload", function()
+    if not (btn == nil) then
+        p("Removing button (unloading)")
+        UIRoot.RemoveComponent(btn)
+    end
+
+    btn = null
+    p("Unloaded")
 end)
